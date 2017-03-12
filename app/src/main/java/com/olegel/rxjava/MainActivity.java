@@ -15,32 +15,42 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.subjects.AsyncSubject;
 import io.reactivex.subjects.BehaviorSubject;
 
 public class MainActivity extends AppCompatActivity {
 private TextView textView;
     private Observer<Long> subscribe;
+    private Disposable disp;
     public static final String TAG = MainActivity.class.getSimpleName();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView = (TextView) findViewById(R.id.text);
-        final Scheduler sch = new Scheduler() {
-            @Override
-            public Worker createWorker() {
-                Log.d(TAG, "createWorker: ");
-                return null;
-            }
-        };
-       Observable<Long> sub1 = Observable.interval(500, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread());
-                sub1.subscribeOn(sch);
-           
-       
-       sub1.unsubscribeOn(sch);
+
+      disp = Observable.interval(500, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<Long>() {
+                    @Override
+                    public void onNext(Long value) {
+                        Log.d(TAG, "onNext:1 "+setTextView());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onNext:2 "+setTextView());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(TAG, "onNext:3 "+setTextView());
+                    }
+                });
 
     }
     private String setTextView(){
@@ -49,6 +59,7 @@ private TextView textView;
 
     @Override
     protected void onDestroy() {
+        disp.dispose();
         super.onDestroy();
     }
 }

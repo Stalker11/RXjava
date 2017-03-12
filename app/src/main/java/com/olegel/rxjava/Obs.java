@@ -4,12 +4,14 @@ import android.util.Log;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
-public class Obs implements Observer<Long> {
+public class Obs implements Observer<Long>, Consumer<Long> {
     private static final String TAG = Obs.class.getSimpleName();
     @Override
     public void onSubscribe(Disposable d) {
         Log.d(TAG, "onSubscribe:1 "+d.isDisposed());
+
     }
 
     @Override
@@ -25,5 +27,10 @@ public class Obs implements Observer<Long> {
     @Override
     public void onComplete() {
         Log.d(TAG, "onSubscribe:4 ");
+    }
+
+    @Override
+    public void accept(Long aLong) throws Exception {
+
     }
 }
