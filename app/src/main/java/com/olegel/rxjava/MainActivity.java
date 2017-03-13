@@ -5,22 +5,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import org.reactivestreams.Subscriber;
-import org.reactivestreams.Subscription;
+import com.olegel.rxjava.http.RequestForServer;
 
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.subjects.AsyncSubject;
-import io.reactivex.subjects.BehaviorSubject;
 
 public class MainActivity extends AppCompatActivity {
 private TextView textView;
@@ -32,7 +25,7 @@ private TextView textView;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView = (TextView) findViewById(R.id.text);
-
+        new RequestForServer().request();
       disp = Observable.interval(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<Long>() {
