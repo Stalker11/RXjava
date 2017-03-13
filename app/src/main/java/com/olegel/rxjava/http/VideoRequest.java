@@ -16,7 +16,7 @@ public interface VideoRequest {
     Call<JsonElement> getFilmInformationForDirector(@Query(value = "director", encoded = true) String director);
 
     @POST("/api/api.php?")
-    Observable<DescriptionFilm> getFilmInformationForActor(@Query(value = "actor", encoded = true) String actor);
+    Observable<ListFilms> getFilmInformationForActor(@Query(value = "actor", encoded = true) String actor);
 }
 
 

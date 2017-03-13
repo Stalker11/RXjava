@@ -43,23 +43,8 @@ public class RequestForServer {
                 Log.d(TAG, "request:3 ");
             }
         });
-        filmObservable.subscribeWith(new DisposableObserver<DescriptionFilm>() {
-            @Override
-            public void onNext(DescriptionFilm value) {
-                Log.d(TAG, "request:111 "+value.getActors());
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d(TAG, "request:222 "+e.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-                Log.d(TAG, "request:333 ");
-            }
-        });
-
+        Observable<ListFilms> filmsObservable = request.getFilmInformationForActor("Quentin%20Tarantino");
+        Observable<DescriptionFilm> desc = filmsObservable.concatMapIterable(ListFilms::equals);
     }
 
 
