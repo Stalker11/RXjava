@@ -1,6 +1,7 @@
 package com.olegel.rxjava;
 
 import android.content.Context;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.olegel.rxjava.http.RequestForServer;
+import com.olegel.rxjava.recivers.NetworkReciver;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private Observer<Long> subscribe;
     private Disposable disp;
     public static final String TAG = MainActivity.class.getSimpleName();
+    private NetworkReciver receiver = new NetworkReciver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.text);
         new RequestForServer().request();
         internetConnection();
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        receiver = new NetworkReciver();
+        this.registerReceiver(receiver, filter);
+        Log.d(TAG, "onCreate: "+WiFiInspection());
         disp = Observable.interval(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableObserver<Long>() {
@@ -65,9 +72,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         disp.dispose();
+        if (receiver != null) {
+            this.unregisterReceiver(receiver);
+        }
         super.onDestroy();
     }
+    private boolean WiFiInspection() {
+        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        NetworkInfo tt = connManager.getActiveNetworkInfo();
+
+        NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        NetworkInfo mobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        NetworkInfo ethernet = connManager.getNetworkInfo(ConnectivityManager.TYPE_ETHERNET);
+        if (mobile.isConnected()) {
+            return true;
+        }
+        return false;
+    }
     public void internetConnection() {
         ConnectivityManager conMan = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 

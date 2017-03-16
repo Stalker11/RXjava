@@ -13,10 +13,13 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                    <action android:name="android.intent.action.MANAGE_NETWORK_USAGE" />
+                    <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
+    <receiver
+        android:name=".recivers.NetworkReciver"
+        android:enabled="true" />
 </manifest>
