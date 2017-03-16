@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private boolean WiFiInspection() {
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
+///
         NetworkInfo tt = connManager.getActiveNetworkInfo();
 
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
