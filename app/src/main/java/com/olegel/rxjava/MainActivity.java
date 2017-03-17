@@ -11,6 +11,7 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.TextureView;
 import android.widget.TextView;
 
 import com.olegel.rxjava.http.RequestForServer;
@@ -27,6 +28,7 @@ import io.reactivex.observers.DisposableObserver;
 
 public class MainActivity extends AppCompatActivity {
     private TextView textView;
+    private TextView internet;
     private Observer<Long> subscribe;
     private Disposable disp;
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView = (TextView) findViewById(R.id.text);
+        internet = (TextView) findViewById(R.id.textView);
         new RequestForServer().request();
         internetConnection();
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -61,12 +64,19 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "onNext:3 " + setTextView());
                     }
                 });
-
     }
 
     private String setTextView() {
         textView.setText(Long.toString(System.currentTimeMillis()));
         return "";
+    }
+
+    @Override
+    protected void onPostResume() {
+        if(receiver != null){
+            internet.setText(receiver.networkState());
+        }
+        super.onPostResume();
     }
 
     @Override
