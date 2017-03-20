@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -27,7 +29,7 @@ public class RequestForServer {
             .build();
     public void request(){
         VideoRequest request = retrofit.create(VideoRequest.class);
-       /* Observable<DescriptionFilm> filmObservable = request.getFilmInformationForTitle("Attack%20on%20titan");
+        Observable<DescriptionFilm> filmObservable = request.getFilmInformationForTitle();
         filmObservable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<DescriptionFilm>() {
             @Override
             public void onNext(DescriptionFilm value) {
@@ -42,8 +44,9 @@ public class RequestForServer {
             @Override
             public void onComplete() {
                 Log.d(TAG, "request:3 ");
+
             }
-        });*/
+        });
       /*  Observable<ListFilms> filmsObservable = request.getFilmInformationForTitle("Attack%20on%20titan");
         mCompositeDisposable = new CompositeDisposable();
         filmsObservable.subscribeOn(Schedulers.newThread())
@@ -53,7 +56,7 @@ public class RequestForServer {
                 });*/
         //Observable<DescriptionFilm> desc = filmsObservable.concatMapIterable(this::handleResponse);
         mCompositeDisposable = new CompositeDisposable();
-        mCompositeDisposable.add(request.getFilmInformationForActor("Quentin%20Tarantino")
+        mCompositeDisposable.add(request.getFilmInformationForActor()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::handleResponse,this::handleError));
@@ -76,8 +79,11 @@ public class RequestForServer {
 
         Log.d(TAG, "handleError: "+error.getLocalizedMessage());
     }
-
+    private void killConnection(){
+        mCompositeDisposable.dispose();
     }
+    }
+
 
 
 

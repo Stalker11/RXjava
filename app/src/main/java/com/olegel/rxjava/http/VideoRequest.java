@@ -9,14 +9,14 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface VideoRequest {
-    @POST("/api/api.php?")
-    Observable<List<DescriptionFilm>> getFilmInformationForTitle(@Query(value = "title", encoded = true) String filmName);
+    @POST("/?json=1")
+    Observable<DescriptionFilm> getFilmInformationForTitle();
 
     @POST("/api/api.php?")
     Observable<ListFilms> getFilmInformationForDirector(@Query(value = "director", encoded = true) String director);
 
-    @POST("/api/api.php?")
-    Observable<List<DescriptionFilm>> getFilmInformationForActor(@Query(value = "actor", encoded = true) String actor);
+    @POST("/?json=2")
+    Observable<List<DescriptionFilm>> getFilmInformationForActor();
 }
 
 
